@@ -57,8 +57,6 @@ const AuthScreen = () => {
           'OAuth redirect is not properly configured. Please contact support.',
           [{ text: 'OK' }]
         );
-      } else {
-        Alert.alert('Login Failed', errorMessage, [{ text: 'OK' }]);
       }
     } else if (oauthState.status === 'done') {
       setIsLoading(false);
