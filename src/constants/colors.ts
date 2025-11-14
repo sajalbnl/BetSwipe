@@ -6,7 +6,7 @@ export const COLORS = {
   inputBackground: '#1A1A1A',
   
   // Primary brand colors
-  primary: '#4562e7ff',        // Green accent (like Betly)
+  primary: '#4562e7ff',        // Blue accent 
   primaryDark: '#3656e4ff',
   primaryLight: '#5570e7ff',
   

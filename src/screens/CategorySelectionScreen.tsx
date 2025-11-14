@@ -3,22 +3,15 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   FlatList,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {styles} from './CategorySelectionScreen.styles';
+import { CATEGORIES } from '../constants/categories';
 
-const CATEGORIES = [
-  {id: 'politics', name: 'Politics', emoji: '🏛️'},
-  {id: 'crypto', name: 'Crypto', emoji: '₿'},
-  {id: 'sports', name: 'Sports', emoji: '⚽'},
-  {id: 'business', name: 'Business', emoji: '💼'},
-  {id: 'entertainment', name: 'Entertainment', emoji: '🎬'},
-  {id: 'science', name: 'Science', emoji: '🔬'},
-  {id: 'weather', name: 'Weather', emoji: '🌤️'},
-  {id: 'finance', name: 'Finance', emoji: '📈'},
-];
+
+
 
 const CategorySelectionScreen = ({navigation}: any) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -50,10 +43,10 @@ const CategorySelectionScreen = ({navigation}: any) => {
         style={[styles.categoryCard, isSelected && styles.categoryCardSelected]}
         onPress={() => toggleCategory(item.id)}>
         <Text style={styles.categoryEmoji}>{item.emoji}</Text>
-        <Text style={[styles.categoryName, isSelected && styles.categoryNameSelected]}>
-          {item.name}
+        <Text style={[styles.categoryName]}>
+          {item.label}
         </Text>
-        {isSelected && <Text style={styles.checkmark}>✓</Text>}
+        
       </TouchableOpacity>
     );
   };
@@ -104,93 +97,5 @@ const CategorySelectionScreen = ({navigation}: any) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0A0E27',
-  },
-  content: {
-    flex: 1,
-    padding: 24,
-  },
-  header: {
-    marginBottom: 32,
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#8B8B8B',
-  },
-  grid: {
-    flexGrow: 1,
-  },
-  categoryCard: {
-    flex: 1,
-    aspectRatio: 1,
-    backgroundColor: '#1A1F3A',
-    borderRadius: 16,
-    margin: 8,
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  categoryCardSelected: {
-    backgroundColor: '#2A2F4A',
-    borderColor: '#4F46E5',
-  },
-  categoryEmoji: {
-    fontSize: 48,
-    marginBottom: 8,
-  },
-  categoryName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  categoryNameSelected: {
-    color: '#4F46E5',
-  },
-  checkmark: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    fontSize: 20,
-    color: '#4F46E5',
-  },
-  footer: {
-    paddingTop: 16,
-  },
-  selectedCount: {
-    fontSize: 14,
-    color: '#8B8B8B',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  continueButton: {
-    backgroundColor: '#4F46E5',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-  },
-  continueButtonDisabled: {
-    backgroundColor: '#2A2F4A',
-    opacity: 0.5,
-  },
-  continueButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
 
 export default CategorySelectionScreen;
