@@ -22,9 +22,7 @@ import {
   useLoginWithOAuth,
 } from '@privy-io/expo';
 
-if (Platform.OS === 'android') {
-  WebBrowser.warmUpAsync();
-}
+
 
 const AuthScreen = () => {
   const router = useRouter();
