@@ -11,8 +11,6 @@ import {styles} from './CategorySelectionScreen.styles';
 import { CATEGORIES } from '../constants/categories';
 
 
-
-
 const CategorySelectionScreen = ({navigation}: any) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 

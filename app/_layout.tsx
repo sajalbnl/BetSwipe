@@ -7,12 +7,15 @@ import * as Linking from 'expo-linking';
 
 
 export default function Layout() {
+  const appId = process.env.EXPO_PUBLIC_PRIVY_APP_ID;
+  const clientId = process.env.EXPO_PUBLIC_PRIVY_CLIENT_ID;
+
   return (
     // customize screenOptions like headerShown false, animation, etc.
     <>
-    <PrivyProvider 
-      appId="cmhsw53s400t2js0ccjoz3h9g" 
-      clientId="client-WY6SWUQ4459MGxq8CEbueSi8dgafoevE4hz6UXTZfoMMH"
+    <PrivyProvider
+      appId={appId}
+      clientId={clientId}
       > 
     <Stack
       screenOptions={{
