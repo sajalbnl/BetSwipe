@@ -3,6 +3,7 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 import {PrivyProvider} from '@privy-io/expo';
+import {PrivyElements} from '@privy-io/expo/ui';
 import * as Linking from 'expo-linking';
 
 
@@ -17,11 +18,13 @@ export default function Layout() {
       appId={appId}
       clientId={clientId}
       > 
+      
     <Stack
       screenOptions={{
         headerShown: false,
       }}
     />
+    <PrivyElements config={{appearance: {accentColor: '#4562e7ff'}}} />
     </PrivyProvider>
     </>
   );

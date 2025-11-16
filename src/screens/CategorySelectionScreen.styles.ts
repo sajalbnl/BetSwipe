@@ -27,6 +27,12 @@ export const styles = StyleSheet.create({
   grid: {
     flexGrow: 1,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
   categoryCard: {
     flex: 1,
     aspectRatio: 1,
