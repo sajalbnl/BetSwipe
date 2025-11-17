@@ -64,15 +64,15 @@ const AuthScreen = () => {
     }
   }, [oauthState]);
 
-  // Monitor email login state
-  useEffect(() => {
-    if (emailState.status === 'error') {
-      setIsLoading(false);
-      Alert.alert('Error', 'Email login failed. Please try again.');
-    } else if (emailState.status === 'done') {
-      setIsLoading(false);
-    }
-  }, [emailState]);
+  // // Monitor email login state
+  // useEffect(() => {
+  //   if (emailState.status === 'error') {
+  //     setIsLoading(false);
+  //     Alert.alert('Error', 'Email login failed. Please try again.');
+  //   } else if (emailState.status === 'done') {
+  //     setIsLoading(false);
+  //   }
+  // }, [emailState]);
 
   // Check authentication status
   useEffect(() => {
@@ -135,9 +135,16 @@ const AuthScreen = () => {
     try {
       setIsLoading(true);
       await loginWithCode({ email, code });
-    } catch (err) {
-      Alert.alert('Error', 'Verification failed');
+    } catch (err:any) {
+      if (err?.message?.includes('Already logged in')) {
+        console.log('User is already logged in, navigating to home...');
+        router.navigate('/(tabs)');
+        return;
+      }else{
+        Alert.alert('Error', 'Verification failed');
       console.error('Email verification error:', err);
+      }
+      
     } finally {
       setIsLoading(false);
     }

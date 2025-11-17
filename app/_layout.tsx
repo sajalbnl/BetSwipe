@@ -18,7 +18,6 @@ export default function Layout() {
       appId={appId}
       clientId={clientId}
       > 
-      
     <Stack
       screenOptions={{
         headerShown: false,

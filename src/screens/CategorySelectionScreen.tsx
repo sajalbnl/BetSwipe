@@ -81,7 +81,7 @@ const CategorySelectionScreen = ({navigation}: any) => {
         console.log('Categories saved successfully:', selectedCategories);
         
         // Navigate to main app (you'll create this screen next)
-        router.push('/home-screen');;
+        router.navigate('/(tabs)');
       } else {
         throw new Error(response.message || 'Failed to save categories');
       }
@@ -92,7 +92,7 @@ const CategorySelectionScreen = ({navigation}: any) => {
         error.message || 'Failed to save your preferences. Please try again.',
         [
           { text: 'Try Again', onPress: () => {} },
-          { text: 'Continue Anyway', onPress: () => router.replace('/main') }
+          { text: 'Continue Anyway', onPress: () => router.replace('/(tabs)') }
         ]
       );
     } finally {
