@@ -14,6 +14,11 @@ export const COLORS = {
   textPrimary: '#FFFFFF',
   textSecondary: '#A3A3A3',
   textTertiary: '#737373',
+
+  //navbar
+  navbarBackground: '#0a0f1e',
+  navbarActive: '#00e2f1',
+  navbarInactive: '#9499a3',
   
   // Border colors
   border: '#262626',

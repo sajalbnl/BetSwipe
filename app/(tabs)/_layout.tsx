@@ -1,14 +1,75 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
+import { Tabs } from 'expo-router';
+import { View, Text } from 'react-native';
+import { COLORS } from '../../src/constants/colors';
+import { Image } from 'react-native';
 
-export default function Layout() {
-    return(
-        <Tabs>
-            <Tabs.Screen name="index" options={{headerShown:false, tabBarLabel:'Market'}} />
-            <Tabs.Screen name="search" options={{headerShown:false, tabBarLabel:'Search'}} />
-            <Tabs.Screen name="portfolio" options={{headerShown:false, tabBarLabel:'Portfolio'}} />
-            <Tabs.Screen name="profile" options={{headerShown:false, tabBarLabel:'Profile'}} />
-        </Tabs>
-    )
+// Tab bar icons
+const TabBarIcon = ({ name, color }: { name: string; color: string }) => {
+  const icons: Record<string, any> = {
+    market: require('../../assets/markets.png'),
+    portfolio: require('../../assets/portfolio.png'),
+    search: require('../../assets/search.png'),
+    profile: require('../../assets/profile.png'),
+  };
+  
+  return (
+    <Image source={icons[name]} 
+      style={{ 
+        width: 24, 
+        height: 24,
+        tintColor: color  
+      }}/>
+  );
+};
 
+export default function TabLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: COLORS.navbarActive,
+        tabBarInactiveTintColor: COLORS.navbarInactive,
+        tabBarStyle: {
+          backgroundColor: COLORS.navbarBackground,
+          borderTopColor: COLORS.border,
+          borderTopWidth: 1,
+          borderTopRightRadius: 5,
+          borderTopLeftRadius: 5,
+          height: 85,
+          paddingBottom: 25,
+          paddingTop: 10,
+        },
+        headerShown: false,
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Markets',
+          tabBarIcon: ({ color }) => <TabBarIcon name="market" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="portfolio"
+        options={{
+          title: 'Portfolio',
+          tabBarIcon: ({ color }) => <TabBarIcon name="portfolio" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="profile" color={color} />,
+        }}
+      />
+    </Tabs>
+  );
 }

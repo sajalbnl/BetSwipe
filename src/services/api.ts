@@ -1,8 +1,8 @@
 // src/services/api.ts
 
-// Configure your backend URL
-const API_BASE_URL = __DEV__ 
-  ? 'http://localhost:5500/api'  
+
+const API_BASE_URL = __DEV__
+  ? process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5500/api'
   : 'https://your-production-api.com/api';
 
 // API response types
