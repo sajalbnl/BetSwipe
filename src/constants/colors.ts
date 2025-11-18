@@ -2,8 +2,8 @@
 export const COLORS = {
   // Background colors
   background: '#000000',
-  cardBackground: '#0F0F0F',
-  inputBackground: '#1A1A1A',
+  cardBackground: '#0a0f1e',
+  inputBackground: '#182233ff',
   
   // Primary brand colors
   primary: '#4562e7ff',        // Blue accent 
@@ -21,7 +21,7 @@ export const COLORS = {
   navbarInactive: '#9499a3',
   
   // Border colors
-  border: '#262626',
+  border: '#353434ff',
   borderFocus: '#4ADE80',
   
   // Status colors

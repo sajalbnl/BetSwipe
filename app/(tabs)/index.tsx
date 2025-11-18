@@ -4,8 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import SwipeStack from '../../src/components/SwipeStack';
 import { COLORS } from '../../src/constants/colors';
 import { TEXT_STYLES } from '../../src/constants/typography';
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: 5,
     paddingHorizontal: 50,
   },
   actionButton: {

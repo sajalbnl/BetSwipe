@@ -33,8 +33,6 @@ export default function TabLayout() {
           backgroundColor: COLORS.navbarBackground,
           borderTopColor: COLORS.border,
           borderTopWidth: 1,
-          borderTopRightRadius: 5,
-          borderTopLeftRadius: 5,
           height: 85,
           paddingBottom: 25,
           paddingTop: 10,

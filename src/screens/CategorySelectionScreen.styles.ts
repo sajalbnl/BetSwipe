@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    
+
   },
   categoryCard: {
     flex: 1,
@@ -47,7 +47,6 @@ export const styles = StyleSheet.create({
   },
   categoryCardSelected: {
     backgroundColor: COLORS.primary,
-    borderColor: '#4F46E5',
   },
   categoryEmoji: {
     fontSize: 48,

@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
+  TouchableOpacity,
+    Image
 } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { TEXT_STYLES, FONT_SIZES } from '../constants/typography';
 import { Market } from '../types/market';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const CARD_WIDTH = screenWidth - 40;
+const CARD_WIDTH = screenWidth - 18;
 const CARD_HEIGHT = screenHeight * 0.65;
 
 interface MarketCardProps {
@@ -19,12 +21,18 @@ interface MarketCardProps {
 }
 
 const MarketCard: React.FC<MarketCardProps> = ({ market, isActive }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
   return (
     <View style={[styles.card, !isActive && styles.inactiveCard]}>
+        
+        {/* Market Image */}
+      <Image source={{uri: market.imageUrl}}
+       style={styles.img} />
       {/* Category Badge */}
       <View style={styles.categoryBadge}>
         <Text style={styles.categoryText}>{market.category}</Text>
       </View>
+      
 
       {/* Question */}
       <View style={styles.questionContainer}>
@@ -32,12 +40,16 @@ const MarketCard: React.FC<MarketCardProps> = ({ market, isActive }) => {
       </View>
 
       {/* Description */}
-      <View style={styles.descriptionContainer}>
-        <Text style={styles.description} numberOfLines={3}>
-          {market.description}
-        </Text>
-        <Text style={styles.readMore}>Read more</Text>
-      </View>
+    <View style={styles.descriptionContainer}>
+    <Text style={styles.description} numberOfLines={isExpanded ? undefined : 2}>
+      {market.description}
+    </Text>
+    <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+      <Text style={styles.readMore}>
+        {isExpanded ? 'Read less' : 'Read more'}
+      </Text>
+    </TouchableOpacity>
+  </View>
 
       {/* Percentages */}
       <View style={styles.percentagesContainer}>
@@ -95,20 +107,25 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT,
     backgroundColor: COLORS.cardBackground,
     borderRadius: 20,
-    padding: 24,
+   // padding: 18,
     borderWidth: 1,
     borderColor: COLORS.border,
     justifyContent: 'space-between',
+
   },
   inactiveCard: {
-    opacity: 0.6,
+    opacity: 0.7,
   },
   categoryBadge: {
     alignSelf: 'flex-start',
     backgroundColor: COLORS.inputBackground,
+    position: 'absolute',
+    top: 12,
+    left: 12,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
+    zIndex: 10,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
@@ -116,53 +133,65 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontSize: FONT_SIZES.sm,
   },
+  img:{
+    width: '100%',
+    height: 110,
+    borderRadius: 20,
+    opacity: 0.4,
+
+  },
   questionContainer: {
-    marginTop: 20,
+    marginTop: 5,
+    paddingHorizontal: 16,
   },
   question: {
     ...TEXT_STYLES.h3,
     color: COLORS.textPrimary,
+    
     lineHeight: 38,
   },
   descriptionContainer: {
-    marginTop: 16,
+    paddingHorizontal: 16,
+    marginTop: 10,
   },
   description: {
     ...TEXT_STYLES.body,
     color: COLORS.textSecondary,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   readMore: {
     color: COLORS.primary,
     fontSize: FONT_SIZES.sm,
-    marginTop: 8,
+    marginTop: 5,
   },
   percentagesContainer: {
-    marginTop: 30,
+    paddingHorizontal: 16,
+    marginTop: 5,
   },
   percentageRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 2,
   },
   choiceLabel: {
     color: COLORS.textSecondary,
     fontSize: FONT_SIZES.base,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   percentageText: {
     color: COLORS.success,
     fontSize: FONT_SIZES['2xl'],
-    fontWeight: '700',
+    fontWeight: '500',
   },
   noPercent: {
     color: COLORS.error,
   },
   progressBarContainer: {
-    height: 8,
+    height: 5,
+
     backgroundColor: COLORS.inputBackground,
     borderRadius: 4,
-    marginBottom: 20,
+    marginBottom: 10,
     overflow: 'hidden',
   },
   progressBar: {
@@ -176,14 +205,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.error,
   },
   statsContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 20,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
   stat: {
     alignItems: 'center',
+    backgroundColor: COLORS.inputBackground,
+    padding: 10,
+    borderRadius: 10,
+    width: '40%',
   },
   statLabel: {
     color: COLORS.textTertiary,

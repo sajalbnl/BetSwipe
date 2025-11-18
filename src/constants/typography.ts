@@ -28,17 +28,17 @@ export const TEXT_STYLES = {
   h1: {
     fontSize: FONT_SIZES['5xl'],
     fontWeight: FONT_WEIGHTS.bold,
-    lineHeight: FONT_SIZES['5xl'] * 1.2,
+    lineHeight: FONT_SIZES['5xl'] ,
   },
   h2: {
     fontSize: FONT_SIZES['4xl'],
     fontWeight: FONT_WEIGHTS.bold,
-    lineHeight: FONT_SIZES['4xl'] * 1.2,
+    lineHeight: FONT_SIZES['4xl'],
   },
   h3: {
     fontSize: FONT_SIZES['3xl'],
     fontWeight: FONT_WEIGHTS.semibold,
-    lineHeight: FONT_SIZES['3xl'] * 1.2,
+    lineHeight: FONT_SIZES['3xl'],
   },
   body: {
     fontSize: FONT_SIZES.base,
