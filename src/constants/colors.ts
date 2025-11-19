@@ -17,7 +17,7 @@ export const COLORS = {
 
   //navbar
   navbarBackground: '#0a0f1e',
-  navbarActive: '#00e2f1',
+  navbarActive: '#4562e7ff',
   navbarInactive: '#9499a3',
   
   // Border colors

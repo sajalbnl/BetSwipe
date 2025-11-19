@@ -5,7 +5,9 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-    Image
+    Image,
+    TextInput,
+    Keyboard,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { COLORS } from '../constants/colors';
@@ -23,7 +25,49 @@ interface MarketCardProps {
 
 const MarketCard: React.FC<MarketCardProps> = ({ market, isActive }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [betAmount, setBetAmount] = useState<string>('100');
+  const [customAmount, setCustomAmount] = useState<string>('');
+  const [showingReturn, setShowingReturn] = useState<'YES' | 'NO'>('YES');
+
+  const PRESET_AMOUNTS = ['1', '10', '50', '100'];
+
+  // Calculate potential return based on percentage
+  const calculateReturn = (amount: string, choice: 'YES' | 'NO') => {
+    const numAmount = parseFloat(amount) || 0;
+    const percentage = choice === 'YES' ? market.yesPercentage : market.noPercentage;
+    // Simple calculation: lower percentage = higher return
+    const multiplier = (100 / percentage);
+    return (numAmount * multiplier).toFixed(2);
+  };
+
+  const handleAmountSelect = (amount: string) => {
+    setBetAmount(amount);
+    setCustomAmount('');
+  };
+
+  const MAX_DIGITS = 7; // user can type max 7 digits → up to 9,999,999
+
+const handleCustomAmountChange = (text: string) => {
+  // Allow only numbers
+  const numericText = text.replace(/[^0-9]/g, '');
+
+  //BLOCK input if user tries to type more than 7 digits
+  if (numericText.length > MAX_DIGITS) {
+    return; // simply ignore extra typing
+  }
+
+  setCustomAmount(numericText);
+
+  if (numericText) {
+    setBetAmount(numericText);
+  }
+};
+
+  const currentAmount = customAmount || betAmount;
+  const potentialReturn = calculateReturn(currentAmount, showingReturn);
+
   return (
+    
     <View style={[styles.card, !isActive && styles.inactiveCard]}>
         
         {/* Market Image */}
@@ -41,7 +85,7 @@ const MarketCard: React.FC<MarketCardProps> = ({ market, isActive }) => {
       </View>
 
       {/* Description */}
-    <View style={styles.descriptionContainer}>
+    {/* <View style={styles.descriptionContainer}>
     <Text style={styles.description} numberOfLines={isExpanded ? undefined : 2}>
       {market.description}
     </Text>
@@ -50,7 +94,68 @@ const MarketCard: React.FC<MarketCardProps> = ({ market, isActive }) => {
         {isExpanded ? 'Read less' : 'Read more'}
       </Text>
     </TouchableOpacity>
-  </View>
+  </View> */}
+
+      {/* Bet Amount Section - NEW */}
+      <View style={styles.betSection}>
+        <View style={styles.betHeader}>
+          <Text style={styles.betLabel}>Bet Amount</Text>
+          <View style={styles.betInputContainer}>
+            <Text style={styles.currencySymbol}>$</Text>
+            <TextInput
+              style={styles.betInput}
+              value={customAmount || betAmount}
+              onChangeText={handleCustomAmountChange}
+              keyboardType="numeric"
+              placeholder={betAmount}
+              placeholderTextColor={COLORS.textTertiary}
+              returnKeyType="done"
+              onSubmitEditing={Keyboard.dismiss}
+            />
+          </View>
+        </View>
+
+        <View style={styles.presetAmounts}>
+          {PRESET_AMOUNTS.map((amount) => (
+            <TouchableOpacity
+              key={amount}
+              style={[
+                styles.presetButton,
+                betAmount === amount && !customAmount && styles.presetButtonActive,
+              ]}
+              onPress={() => handleAmountSelect(amount)}
+            >
+              <Text
+                style={[
+                  styles.presetButtonText,
+                  betAmount === amount && !customAmount && styles.presetButtonTextActive,
+                ]}
+              >
+                ${amount}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Potential Return */}
+        <TouchableOpacity 
+          style={styles.returnContainer}
+          onPress={() => setShowingReturn(showingReturn === 'YES' ? 'NO' : 'YES')}
+        >
+          <Text style={styles.returnLabel}>
+            Potential Return ({showingReturn})
+          </Text>
+          <Text 
+            style={[
+              styles.returnValue,
+              showingReturn === 'YES' ? styles.returnYes : styles.returnNo
+            ]}
+          >
+            ${potentialReturn}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
 
       {/* Percentages */}
       <View style={styles.percentagesContainer}>
@@ -152,10 +257,11 @@ const styles = StyleSheet.create({
   },
   img:{
     width: '100%',
-    height: 110,
+    height: 100,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     opacity: 0.5,
+    resizeMode: 'cover',
 
   },
   questionContainer: {
@@ -182,14 +288,95 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.sm,
     marginTop: 5,
   },
+
+  // Bet Section Styles
+  betSection: {
+    paddingHorizontal: 16,
+    marginBottom: 5,
+  },
+  betHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  betLabel: {
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.sm,
+  },
+  betInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.inputBackground,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    minWidth: 100,
+  },
+  currencySymbol: {
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.base,
+    marginRight: 4,
+  },
+  betInput: {
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    minWidth: 60,
+  },
+  presetAmounts: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  presetButton: {
+    flex: 1,
+    backgroundColor: COLORS.inputBackground,
+    paddingVertical: 10,
+    marginHorizontal: 4,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  presetButtonActive: {
+    backgroundColor: COLORS.primary,
+  },
+  presetButtonText: {
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+  },
+  presetButtonTextActive: {
+    color: COLORS.textPrimary,
+  },
+  returnContainer: {
+    backgroundColor: COLORS.inputBackground,
+    padding: 12,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  returnLabel: {
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.sm,
+  },
+  returnValue: {
+    fontSize: FONT_SIZES['2xl'],
+    fontWeight: '700',
+  },
+  returnYes: {
+    color: COLORS.success,
+  },
+  returnNo: {
+    color: COLORS.error,
+  },
   percentagesContainer: {
     paddingHorizontal: 16,
-    marginTop: 5,
   },
   percentageRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 2,
+    marginBottom: 1,
   },
   choiceLabel: {
     color: COLORS.textSecondary,

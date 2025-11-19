@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SwipeStack from '../../src/components/SwipeStack';
 import { COLORS } from '../../src/constants/colors';
+import { SwipeStackRef } from '../../src/components/SwipeStack';
 import { TEXT_STYLES } from '../../src/constants/typography';
 import { Market } from '../../src/types/market';
 import { MOCK_MARKETS } from '../../src/data/mockMarkets';
@@ -15,6 +16,7 @@ import { MOCK_MARKETS } from '../../src/data/mockMarkets';
 export default function MarketsScreen() {
   const [markets] = useState<Market[]>(MOCK_MARKETS);
   const [betHistory, setBetHistory] = useState<any[]>([]);
+  const swipeStackRef = useRef<SwipeStackRef>(null);
 
   const handleSwipeRight = (market: Market) => {
     console.log('Bet YES on:', market.question);
@@ -31,6 +33,19 @@ export default function MarketsScreen() {
   const handleSwipeUp = (market: Market) => {
     console.log('Skipped:', market.question);
     // TODO: Track skipped markets
+  };
+
+  // Button handlers
+  const handleNoPress = () => {
+    swipeStackRef.current?.swipeLeft();
+  };
+
+  const handleSkipPress = () => {
+    swipeStackRef.current?.swipeUp();
+  };
+
+  const handleYesPress = () => {
+    swipeStackRef.current?.swipeRight();
   };
 
   return (
@@ -53,6 +68,7 @@ export default function MarketsScreen() {
       {/* Swipe Stack */}
       <View style={styles.swipeContainer}>
         <SwipeStack
+        ref={swipeStackRef}
           markets={markets}
           onSwipeRight={handleSwipeRight}
           onSwipeLeft={handleSwipeLeft}
@@ -64,21 +80,24 @@ export default function MarketsScreen() {
       <View style={styles.actionButtons}>
         <TouchableOpacity 
           style={[styles.actionButton, styles.noButton]}
-          onPress={() => console.log('Manual NO')}
+          onPress={handleNoPress}
+          activeOpacity={0.8}
         >
           <Text style={styles.buttonIcon}>✕</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
           style={[styles.actionButton, styles.skipButton]}
-          onPress={() => console.log('Manual SKIP')}
+          onPress={handleSkipPress}
+          activeOpacity={0.8}
         >
           <Text style={styles.buttonIcon}>↻</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
           style={[styles.actionButton, styles.yesButton]}
-          onPress={() => console.log('Manual YES')}
+          onPress={handleYesPress}
+          activeOpacity={0.8}
         >
           <Text style={styles.buttonIcon}>✓</Text>
         </TouchableOpacity>

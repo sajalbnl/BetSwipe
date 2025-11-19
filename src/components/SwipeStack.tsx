@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, forwardRef, useImperativeHandle} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,8 +13,8 @@ import { COLORS } from '../constants/colors';
 import { TEXT_STYLES } from '../constants/typography';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const SWIPE_THRESHOLD = 120;
-const SWIPE_OUT_DURATION = 250;
+const SWIPE_THRESHOLD = 200;
+const SWIPE_OUT_DURATION = 350;
 
 interface SwipeStackProps {
   markets: Market[];
@@ -22,13 +22,18 @@ interface SwipeStackProps {
   onSwipeLeft: (market: Market) => void;
   onSwipeUp: (market: Market) => void;
 }
+export interface SwipeStackRef {
+  swipeLeft: () => void;
+  swipeRight: () => void;
+  swipeUp: () => void;
+}
 
-const SwipeStack: React.FC<SwipeStackProps> = ({
+const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
   markets,
   onSwipeRight,
   onSwipeLeft,
   onSwipeUp,
-}) => {
+},ref) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const position = useRef(new Animated.ValueXY()).current;
   const rotateCard = position.x.interpolate({
@@ -44,8 +49,12 @@ const SwipeStack: React.FC<SwipeStackProps> = ({
   };
 
   const forceSwipe = (direction: 'right' | 'left' | 'up') => {
+    // If there's already an animation in progress, ignore
+    if (currentIndex >= markets.length) return;
+
     const x = direction === 'right' ? screenWidth : direction === 'left' ? -screenWidth : 0;
     const y = direction === 'up' ? -screenHeight : 0;
+    
 
     Animated.timing(position, {
       toValue: { x, y },
@@ -65,6 +74,12 @@ const SwipeStack: React.FC<SwipeStackProps> = ({
       nextCard();
     });
   };
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    swipeLeft: () => forceSwipe('left'),
+    swipeRight: () => forceSwipe('right'),
+    swipeUp: () => forceSwipe('up'),
+  }));
 
   const panResponder = useRef(
     PanResponder.create({
@@ -83,6 +98,7 @@ const SwipeStack: React.FC<SwipeStackProps> = ({
           // Spring back to center
           Animated.spring(position, {
             toValue: { x: 0, y: 0 },
+            friction: 4,
             useNativeDriver: false,
           }).start();
         }
@@ -190,7 +206,7 @@ const SwipeStack: React.FC<SwipeStackProps> = ({
   };
 
   return <View style={styles.container}>{renderCards()}</View>;
-};
+});
 
 const styles = StyleSheet.create({
   container: {
