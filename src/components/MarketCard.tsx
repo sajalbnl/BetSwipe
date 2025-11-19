@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
     Image
 } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { COLORS } from '../constants/colors';
 import { TEXT_STYLES, FONT_SIZES } from '../constants/typography';
 import { Market } from '../types/market';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const CARD_WIDTH = screenWidth - 18;
-const CARD_HEIGHT = screenHeight * 0.65;
+const CARD_HEIGHT = screenHeight * 0.675;
 
 interface MarketCardProps {
   market: Market;
@@ -97,6 +98,13 @@ const MarketCard: React.FC<MarketCardProps> = ({ market, isActive }) => {
           <Text style={styles.statValue}>{market.liquidity}</Text>
         </View>
       </View>
+      {!isActive && (
+        <BlurView 
+          intensity={20} 
+          style={styles.blurOverlay}
+          tint="dark"
+        />
+      )}
     </View>
   );
 };
@@ -114,7 +122,17 @@ const styles = StyleSheet.create({
 
   },
   inactiveCard: {
-    opacity: 0.7,
+    filter: 'blur(200px)',
+    
+  },
+  blurOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   categoryBadge: {
     alignSelf: 'flex-start',
@@ -125,7 +143,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
-    zIndex: 10,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
@@ -136,12 +153,13 @@ const styles = StyleSheet.create({
   img:{
     width: '100%',
     height: 110,
-    borderRadius: 20,
-    opacity: 0.4,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    opacity: 0.5,
 
   },
   questionContainer: {
-    marginTop: 5,
+    marginTop: 0,
     paddingHorizontal: 16,
   },
   question: {

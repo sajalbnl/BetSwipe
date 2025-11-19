@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 12,
   },
   logo: {
     ...TEXT_STYLES.h3,
@@ -130,8 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    paddingBottom: 5,
-    paddingHorizontal: 50,
+    paddingHorizontal: 45,
   },
   actionButton: {
     width: 60,

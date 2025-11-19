@@ -179,7 +179,7 @@ const SwipeStack: React.FC<SwipeStackProps> = ({
             key={market.id}
             style={[
               styles.cardContainer,
-              { top: 10 * (index - currentIndex), zIndex: -index },
+              { top: 2 * (index - currentIndex), zIndex: -index },
             ]}
           >
             <MarketCard market={market} isActive={false} />
