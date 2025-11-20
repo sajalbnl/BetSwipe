@@ -13,7 +13,7 @@ import { COLORS } from '../constants/colors';
 import { TEXT_STYLES } from '../constants/typography';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const SWIPE_THRESHOLD = 200;
+const SWIPE_THRESHOLD = 180;
 const SWIPE_OUT_DURATION = 350;
 
 interface SwipeStackProps {
@@ -188,19 +188,51 @@ const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
             </Animated.View>
           );
         }
-
-        // Next card preview
-        return (
-          <View
-            key={market.id}
-            style={[
-              styles.cardContainer,
-              { top: 2 * (index - currentIndex), zIndex: -index },
-            ]}
-          >
-            <MarketCard market={market} isActive={false} />
-          </View>
-        );
+        // Second card in the stack
+         if (index === currentIndex + 1) {
+          return (
+            <Animated.View
+              key={market.id}
+              style={[
+                styles.cardContainer,
+                { 
+                  top: 10,
+                  zIndex: -1,
+                  transform: [
+                    { 
+                      scale: position.x.interpolate({
+                        inputRange: [-screenWidth, 0, screenWidth],
+                        outputRange: [1, 0.95, 1],
+                        extrapolate: 'clamp',
+                      })
+                    }
+                  ]
+                },
+              ]}
+            >
+              <MarketCard market={market} isActive={false} />
+            </Animated.View>
+          );
+        }
+        // Third card in the stack
+        if (index === currentIndex + 2) {
+          return (
+            <View
+              key={market.id}
+              style={[
+                styles.cardContainer,
+                { 
+                  top: 40,
+                  zIndex: -2,
+                  opacity: 0.6,
+                  transform: [{ scale: 0.9 }]
+                },
+              ]}
+            >
+              <MarketCard market={market} isActive={false} />
+            </View>
+          );
+        }
       })
       .reverse();
   };

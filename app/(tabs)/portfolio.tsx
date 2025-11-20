@@ -278,9 +278,9 @@ const PortfolioScreen = () => {
         </View>
 
         {/* Closed Positions Button */}
-        <TouchableOpacity style={styles.viewClosedButton}>
+        {/* <TouchableOpacity style={styles.viewClosedButton}>
           <Text style={styles.viewClosedText}>View Closed Positions →</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
   );
