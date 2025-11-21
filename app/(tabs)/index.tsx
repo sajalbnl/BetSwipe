@@ -1,38 +1,57 @@
-import React, { useState,useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { usePrivy } from '@privy-io/expo';
 import SwipeStack from '../../src/components/SwipeStack';
-import { COLORS } from '../../src/constants/colors';
 import { SwipeStackRef } from '../../src/components/SwipeStack';
-import { TEXT_STYLES } from '../../src/constants/typography';
+import { COLORS } from '../../src/constants/colors';
+import { TEXT_STYLES, FONT_SIZES } from '../../src/constants/typography';
 import { Market } from '../../src/types/market';
-import { MOCK_MARKETS } from '../../src/data/mockMarkets';
+import { useMarketFeed } from '../../src/hooks/useMarketFeed';
 
 export default function MarketsScreen() {
-  const [markets] = useState<Market[]>(MOCK_MARKETS);
-  const [betHistory, setBetHistory] = useState<any[]>([]);
+  const { user } = usePrivy();
+  const userId = user?.id;
   const swipeStackRef = useRef<SwipeStackRef>(null);
+  
+  const {
+    markets,
+    isLoading,
+    error,
+    onMarketSwiped,
+    checkAndFetchMore,
+    refreshMarkets,
+    totalSwiped,
+  } = useMarketFeed({ userId });
+
+  // Check for more markets when stack changes
+  useEffect(() => {
+    checkAndFetchMore();
+  }, [markets.length]);
 
   const handleSwipeRight = (market: Market) => {
     console.log('Bet YES on:', market.question);
-    setBetHistory(prev => [...prev, { market: market.id, bet: 'YES' }]);
-    // TODO: Integrate with Polymarket API
+    onMarketSwiped(market.id);
+    // TODO: Implement actual bet placement
   };
 
   const handleSwipeLeft = (market: Market) => {
     console.log('Bet NO on:', market.question);
-    setBetHistory(prev => [...prev, { market: market.id, bet: 'NO' }]);
-    // TODO: Integrate with Polymarket API
+    onMarketSwiped(market.id);
+    // TODO: Implement actual bet placement
   };
 
   const handleSwipeUp = (market: Market) => {
     console.log('Skipped:', market.question);
-    // TODO: Track skipped markets
+    onMarketSwiped(market.id);
   };
 
   // Button handlers
@@ -48,11 +67,42 @@ export default function MarketsScreen() {
     swipeStackRef.current?.swipeRight();
   };
 
+  // Loading state
+  if (isLoading && markets.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={styles.loadingText}>Loading markets...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Error state
+  if (error && markets.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={refreshMarkets}>
+            <Text style={styles.retryText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.logo}>BetSwipe</Text>
+        <View>
+          <Text style={styles.logo}>BetSwipe</Text>
+          {totalSwiped > 0 && (
+            <Text style={styles.swipedCount}>{totalSwiped} swiped</Text>
+          )}
+        </View>
         <TouchableOpacity style={styles.walletButton}>
           <Text style={styles.walletText}>💰 Connect Wallet</Text>
         </TouchableOpacity>
@@ -65,23 +115,49 @@ export default function MarketsScreen() {
         </Text>
       </View>
 
-      {/* Swipe Stack */}
+      {/* Swipe Stack or Empty State */}
       <View style={styles.swipeContainer}>
-        <SwipeStack
-        ref={swipeStackRef}
-          markets={markets}
-          onSwipeRight={handleSwipeRight}
-          onSwipeLeft={handleSwipeLeft}
-          onSwipeUp={handleSwipeUp}
-        />
+        {markets.length > 0 ? (
+          <SwipeStack
+            ref={swipeStackRef}
+            markets={markets}
+            onSwipeRight={handleSwipeRight}
+            onSwipeLeft={handleSwipeLeft}
+            onSwipeUp={handleSwipeUp}
+          />
+        ) : (
+          <ScrollView
+            contentContainerStyle={styles.emptyContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={refreshMarkets}
+                tintColor={COLORS.primary}
+              />
+            }
+          >
+            <Text style={styles.emptyText}>No more markets!</Text>
+            <Text style={styles.emptySubtext}>Pull down to refresh</Text>
+          </ScrollView>
+        )}
       </View>
 
+      {/* Loading indicator for fetching more */}
+      {isLoading && markets.length > 0 && (
+        <View style={styles.fetchingMore}>
+          <ActivityIndicator size="small" color={COLORS.primary} />
+          <Text style={styles.fetchingText}>Loading more...</Text>
+        </View>
+      )}
+
       {/* Action Buttons */}
+      {!(markets.length === 0) && (
       <View style={styles.actionButtons}>
         <TouchableOpacity 
           style={[styles.actionButton, styles.noButton]}
           onPress={handleNoPress}
           activeOpacity={0.8}
+          disabled={markets.length === 0}
         >
           <Text style={styles.buttonIcon}>✕</Text>
         </TouchableOpacity>
@@ -90,6 +166,7 @@ export default function MarketsScreen() {
           style={[styles.actionButton, styles.skipButton]}
           onPress={handleSkipPress}
           activeOpacity={0.8}
+          disabled={markets.length === 0}
         >
           <Text style={styles.buttonIcon}>↻</Text>
         </TouchableOpacity>
@@ -98,10 +175,15 @@ export default function MarketsScreen() {
           style={[styles.actionButton, styles.yesButton]}
           onPress={handleYesPress}
           activeOpacity={0.8}
+          disabled={markets.length === 0}
         >
           <Text style={styles.buttonIcon}>✓</Text>
         </TouchableOpacity>
       </View>
+      )}
+      
+
+      
     </SafeAreaView>
   );
 }
@@ -121,6 +203,11 @@ const styles = StyleSheet.create({
   logo: {
     ...TEXT_STYLES.h3,
     color: COLORS.primary,
+  },
+  swipedCount: {
+    fontSize: FONT_SIZES.xs,
+    color: COLORS.textTertiary,
+    marginTop: 2,
   },
   walletButton: {
     backgroundColor: COLORS.primary,
@@ -178,5 +265,68 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 28,
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.base,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    color: COLORS.error,
+    fontSize: FONT_SIZES.base,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  retryText: {
+    color: COLORS.textPrimary,
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    ...TEXT_STYLES.h3,
+    color: COLORS.textPrimary,
+    marginBottom: 10,
+  },
+  emptySubtext: {
+    ...TEXT_STYLES.body,
+    color: COLORS.textSecondary,
+  },
+  fetchingMore: {
+    position: 'absolute',
+    top: 100,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.cardBackground,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  fetchingText: {
+    marginLeft: 8,
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.sm,
   },
 });

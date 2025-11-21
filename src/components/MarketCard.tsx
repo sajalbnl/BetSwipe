@@ -95,6 +95,40 @@ const handleCustomAmountChange = (text: string) => {
       </Text>
     </TouchableOpacity>
   </View> */}
+   {/* Percentages */}
+      <View style={styles.percentagesContainer}>
+        {/* YES */}
+        <View style={styles.percentageRow}>
+          <Text style={styles.choiceLabel}>YES</Text>
+          <Text style={styles.percentageText}>{market.yesPercentage}%</Text>
+        </View>
+        <View style={styles.progressBarContainer}>
+          <View 
+            style={[
+              styles.progressBar, 
+              styles.yesBar,
+              { width: `${market.yesPercentage}%` }
+            ]} 
+          />
+        </View>
+
+        {/* NO */}
+        <View style={styles.percentageRow}>
+          <Text style={styles.choiceLabel}>NO</Text>
+          <Text style={[styles.percentageText, styles.noPercent]}>
+            {market.noPercentage}%
+          </Text>
+        </View>
+        <View style={styles.progressBarContainer}>
+          <View 
+            style={[
+              styles.progressBar, 
+              styles.noBar,
+              { width: `${market.noPercentage}%` }
+            ]} 
+          />
+        </View>
+      </View>
 
       {/* Bet Amount Section - NEW */}
       <View style={styles.betSection}>
@@ -157,40 +191,7 @@ const handleCustomAmountChange = (text: string) => {
       </View>
 
 
-      {/* Percentages */}
-      <View style={styles.percentagesContainer}>
-        {/* YES */}
-        <View style={styles.percentageRow}>
-          <Text style={styles.choiceLabel}>YES</Text>
-          <Text style={styles.percentageText}>{market.yesPercentage}%</Text>
-        </View>
-        <View style={styles.progressBarContainer}>
-          <View 
-            style={[
-              styles.progressBar, 
-              styles.yesBar,
-              { width: `${market.yesPercentage}%` }
-            ]} 
-          />
-        </View>
-
-        {/* NO */}
-        <View style={styles.percentageRow}>
-          <Text style={styles.choiceLabel}>NO</Text>
-          <Text style={[styles.percentageText, styles.noPercent]}>
-            {market.noPercentage}%
-          </Text>
-        </View>
-        <View style={styles.progressBarContainer}>
-          <View 
-            style={[
-              styles.progressBar, 
-              styles.noBar,
-              { width: `${market.noPercentage}%` }
-            ]} 
-          />
-        </View>
-      </View>
+     
 
       {/* Stats */}
       <View style={styles.statsContainer}>
@@ -261,7 +262,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     opacity: 0.5,
-    resizeMode: 'cover',
+    resizeMode: 'stretch',
+    
 
   },
   questionContainer: {
@@ -292,7 +294,7 @@ const styles = StyleSheet.create({
   // Bet Section Styles
   betSection: {
     paddingHorizontal: 16,
-    marginBottom: 5,
+    marginBottom: 3,
   },
   betHeader: {
     flexDirection: 'row',
@@ -332,8 +334,8 @@ const styles = StyleSheet.create({
   presetButton: {
     flex: 1,
     backgroundColor: COLORS.inputBackground,
-    paddingVertical: 10,
-    marginHorizontal: 4,
+    paddingVertical: 6,
+    marginHorizontal: 8,
     borderRadius: 8,
     alignItems: 'center',
   },
@@ -350,7 +352,8 @@ const styles = StyleSheet.create({
   },
   returnContainer: {
     backgroundColor: COLORS.inputBackground,
-    padding: 12,
+    paddingVertical: 9,
+    paddingHorizontal: 11,
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
