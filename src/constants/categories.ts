@@ -19,7 +19,7 @@ export const CATEGORIES = [
     label: "Sports",
     emoji: "⚽",
     tags: ["sports", "nba", "nfl", "cricket", "football", "soccer"],
-    tag_ids: [1,745,450,517,10,100350], 
+    tag_ids: [745,450,517,10,100350], 
   },
   {
     id: "economy",

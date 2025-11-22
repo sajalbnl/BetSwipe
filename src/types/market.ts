@@ -36,6 +36,8 @@ export interface Market {
   category: string;
   yesPercentage: number;
   noPercentage: number;
+  yesPrice?: number;
+  noPrice?: number;
   volume: string;
   liquidity: string;
   endDate?: string;

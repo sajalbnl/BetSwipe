@@ -4,7 +4,7 @@ import { CATEGORIES } from '../constants/categories';
 const POLYMARKET_API_BASE = 'https://gamma-api.polymarket.com';
 const MARKETS_PER_FETCH = 25;
 const MIN_LIQUIDITY = 1000; // Filter out low liquidity markets
-const MIN_VOLUME = 500;
+const MIN_VOLUME = 5000;
 
 class PolymarketService {
   private cache = new Map<string, PolymarketResponse[]>();
@@ -31,6 +31,8 @@ class PolymarketService {
       category,
       yesPercentage: Math.round(yesPrice),
       noPercentage: Math.round(noPrice),
+      yesPrice,
+      noPrice,
       volume: this.formatCurrency(polymarket.volumeNum),
       liquidity: this.formatCurrency(polymarket.liquidityNum),
       volumeNum: polymarket.volumeNum,

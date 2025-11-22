@@ -78,6 +78,7 @@ export default function MarketsScreen() {
       </SafeAreaView>
     );
   }
+  console.log('Rendering MarketsScreen with', markets.length, 'markets');
 
   // Error state
   if (error && markets.length === 0) {
@@ -151,7 +152,7 @@ export default function MarketsScreen() {
       )}
 
       {/* Action Buttons */}
-      {!(markets.length === 0) && (
+      {(markets.length > 0 ) && (
       <View style={styles.actionButtons}>
         <TouchableOpacity 
           style={[styles.actionButton, styles.noButton]}
@@ -181,6 +182,7 @@ export default function MarketsScreen() {
         </TouchableOpacity>
       </View>
       )}
+      
       
 
       
