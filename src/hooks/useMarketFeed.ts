@@ -100,6 +100,7 @@ export const useMarketFeed = ({ userId }: UseMarketFeedProps) => {
   // Track market swipes
   const onMarketSwiped = useCallback((marketId: string) => {
     swipedMarketIds.current.add(marketId);
+    console.log(`Market swiped: ${marketId}. Total swiped: ${swipedMarketIds.current.size}`);
     
     // Reset if too many IDs stored
     if (swipedMarketIds.current.size > MAX_SWIPED_IDS) {

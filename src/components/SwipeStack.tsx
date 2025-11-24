@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle} from 'react';
+import React, { useState, useRef, forwardRef, useImperativeHandle,useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -41,12 +41,16 @@ const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
     outputRange: ['-10deg', '0deg', '10deg'],
   });
 
+  useEffect(() => {
+  setCurrentIndex(0);
+  position.setValue({ x: 0, y: 0 });
+}, [markets]);
+
+
   const nextCard = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex < markets.length - 1 ? prevIndex + 1 : 0
-    );
-    position.setValue({ x: 0, y: 0 });
-  };
+  setCurrentIndex(prevIndex => prevIndex + 1);
+  position.setValue({ x: 0, y: 0 });
+};
 
   const forceSwipe = (direction: 'right' | 'left' | 'up') => {
     // If there's already an animation in progress, ignore
@@ -70,8 +74,8 @@ const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
       } else {
         onSwipeUp(currentMarket);
       }
-      
-      nextCard();
+        nextCard();
+
     });
   };
   // Expose methods to parent component
@@ -81,7 +85,7 @@ const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
     swipeUp: () => forceSwipe('up'),
   }));
 
-  const panResponder = useRef(
+  const panResponder =
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_, gesture) => {
@@ -102,10 +106,9 @@ const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
             useNativeDriver: false,
           }).start();
         }
+        
       },
     })
-  ).current;
-
   const renderCards = () => {
     if (currentIndex >= markets.length) {
       return (
@@ -234,7 +237,6 @@ const SwipeStack =  forwardRef<SwipeStackRef, SwipeStackProps> ( ({
           );
         }
       })
-      .reverse();
   };
 
   return <View style={styles.container}>{renderCards()}</View>;

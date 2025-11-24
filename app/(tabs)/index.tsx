@@ -32,14 +32,16 @@ export default function MarketsScreen() {
     totalSwiped,
   } = useMarketFeed({ userId });
 
-  // Check for more markets when stack changes
+
+  // Log markets changes for debugging
   useEffect(() => {
     checkAndFetchMore();
+    console.log(`MarketsScreen: ${markets.length} markets available`);
   }, [markets.length]);
 
   const handleSwipeRight = (market: Market) => {
     console.log('Bet YES on:', market.question);
-    onMarketSwiped(market.id);
+     onMarketSwiped(market.id);
     // TODO: Implement actual bet placement
   };
 
@@ -78,7 +80,7 @@ export default function MarketsScreen() {
       </SafeAreaView>
     );
   }
-  console.log('Rendering MarketsScreen with', markets.length, 'markets');
+  
 
   // Error state
   if (error && markets.length === 0) {
@@ -152,7 +154,6 @@ export default function MarketsScreen() {
       )}
 
       {/* Action Buttons */}
-      {(markets.length > 0 ) && (
       <View style={styles.actionButtons}>
         <TouchableOpacity 
           style={[styles.actionButton, styles.noButton]}
@@ -181,10 +182,7 @@ export default function MarketsScreen() {
           <Text style={styles.buttonIcon}>✓</Text>
         </TouchableOpacity>
       </View>
-      )}
-      
-      
-
+    
       
     </SafeAreaView>
   );
