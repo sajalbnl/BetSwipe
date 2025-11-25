@@ -79,6 +79,7 @@ const AuthScreen = () => {
     if (isReady && user) {
       router.push('/category-selection');
     }
+    console.log('AuthScreen - isReady:', isReady, 'user:', user);
   }, [isReady, user]);
 
   // Twitter OAuth login via Privy

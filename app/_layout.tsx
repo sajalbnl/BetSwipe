@@ -17,6 +17,13 @@ export default function Layout() {
     <PrivyProvider
       appId={appId}
       clientId={clientId}
+      config={{
+        embedded: {
+            solana: {
+                createOnLogin: 'users-without-wallets',
+            },
+        },
+    }}
       > 
     <Stack
       screenOptions={{
