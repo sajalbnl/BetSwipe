@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 import { usePrivy } from '@privy-io/expo';
 import {styles} from './CategorySelectionScreen.styles';
 import { CATEGORIES } from '../constants/categories';
-import { categoryAPI } from '../services/api';
+import { saveCategories, getCategories } from '../services/api/apis';
 
 const CategorySelectionScreen = ({navigation}: any) => {
   const router = useRouter();
@@ -36,7 +36,7 @@ const CategorySelectionScreen = ({navigation}: any) => {
 
     try {
       setIsFetchingExisting(true);
-      const response = await categoryAPI.getCategories(userId);
+      const response = await getCategories(userId);
       
       if (response.success && response.data?.selectedCategories) {
         setSelectedCategories(response.data.selectedCategories);
@@ -75,7 +75,7 @@ const CategorySelectionScreen = ({navigation}: any) => {
       setIsLoading(true);
       
       // Save categories to backend
-      const response = await categoryAPI.saveCategories(userId, selectedCategories);
+      const response = await saveCategories(userId, selectedCategories);
       
       if (response.success) {
         console.log('Categories saved successfully:', selectedCategories);
