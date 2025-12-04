@@ -1,38 +1,69 @@
 // All API endpoint functions
 
 import { apiCall } from './client';
-import { ApiResponse, UserCategoryData } from './types';
+import {
+  ApiResponse,
+  UserData,
+  RegisterUserResponse,
+  CategorySaveResponse,
+} from './types';
+
+// ===================
+// User APIs
+// ===================
+
+export const registerUser = async (
+  privyUserId: string,
+  polygonWalletAddress?: string
+): Promise<RegisterUserResponse> => {
+  return apiCall<UserData>('/user/register', {
+    method: 'POST',
+    body: JSON.stringify({
+      privyUserId,
+      polygonWalletAddress,
+    }),
+  }) as Promise<RegisterUserResponse>;
+};
+
+export const getUser = async (
+  privyUserId: string
+): Promise<ApiResponse<UserData>> => {
+  return apiCall<UserData>(`/user/${privyUserId}`, {
+    method: 'GET',
+  });
+};
+
+export const updateUser = async (
+  privyUserId: string,
+  updateData: Partial<Pick<UserData, 'polygonWalletAddress' | 'selectedCategories' | 'isOnboarded'>>
+): Promise<ApiResponse<UserData>> => {
+  return apiCall<UserData>(`/user/${privyUserId}`, {
+    method: 'PUT',
+    body: JSON.stringify(updateData),
+  });
+};
 
 // ===================
 // Category APIs
 // ===================
 
 export const saveCategories = async (
-  userId: string,
+  privyUserId: string,
   selectedCategories: string[]
-): Promise<ApiResponse<UserCategoryData>> => {
-  return apiCall<UserCategoryData>('/categories/save', {
+): Promise<CategorySaveResponse> => {
+  return apiCall<UserData>('/categories/save', {
     method: 'POST',
     body: JSON.stringify({
-      userId,
+      privyUserId,
       selectedCategories,
     }),
   });
 };
 
 export const getCategories = async (
-  userId: string
-): Promise<ApiResponse<UserCategoryData>> => {
-  return apiCall<UserCategoryData>(`/categories/${userId}`, {
+  privyUserId: string
+): Promise<ApiResponse<UserData>> => {
+  return apiCall<UserData>(`/categories/${privyUserId}`, {
     method: 'GET',
   });
 };
-
-// ===================
-// Add more APIs below
-// ===================
-
-// Example:
-// export const getUser = async (userId: string): Promise<ApiResponse<UserData>> => {
-//   return apiCall<UserData>(`/users/${userId}`, { method: 'GET' });
-// };

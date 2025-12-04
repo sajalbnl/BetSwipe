@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Market } from '../types/market';
 import polymarketAPI from '../services/polymarketAPI';
-import { categoryAPI } from '../services/api';
+import { getCategories } from '../services/api/apis';
 
 const REFETCH_THRESHOLD = 6; // Fetch more when 6 markets remain
 const MAX_SWIPED_IDS = 2000; // Reset after 2000 to prevent memory issues
@@ -31,7 +31,7 @@ export const useMarketFeed = ({ userId }: UseMarketFeedProps) => {
     }
 
     try {
-      const response = await categoryAPI.getCategories(userId);
+      const response = await getCategories(userId);
       if (response.success && response.data?.selectedCategories) {
         setSelectedCategories(response.data.selectedCategories);
         return response.data.selectedCategories;

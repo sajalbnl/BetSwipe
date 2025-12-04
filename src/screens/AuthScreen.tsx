@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import {
   useLoginWithEmail,
   useLoginWithOAuth,
 } from '@privy-io/expo';
+import { registerUser } from '../services/api/apis';
 
 if (Platform.OS === 'android') {
   WebBrowser.warmUpAsync();
@@ -32,8 +33,9 @@ const AuthScreen = () => {
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const { isReady, user } = usePrivy();
-  const { sendCode, loginWithCode, state: emailState } = useLoginWithEmail();
+  const { sendCode, loginWithCode } = useLoginWithEmail();
   const { login: loginWithOAuth, state: oauthState } = useLoginWithOAuth();
 
   useEffect(() => {
@@ -44,13 +46,13 @@ const AuthScreen = () => {
     };
   }, []);
 
-    // Monitor OAuth state
+  // Monitor OAuth state
   useEffect(() => {
     if (oauthState.status === 'error') {
       setIsLoading(false);
       const errorMessage = oauthState.error?.message || 'OAuth login failed';
       console.error('OAuth error:', oauthState.error);
-      
+
       if (errorMessage.includes('Redirect URL')) {
         Alert.alert(
           'Configuration Error',
@@ -64,20 +66,52 @@ const AuthScreen = () => {
     }
   }, [oauthState]);
 
-  // // Monitor email login state
-  // useEffect(() => {
-  //   if (emailState.status === 'error') {
-  //     setIsLoading(false);
-  //     Alert.alert('Error', 'Email login failed. Please try again.');
-  //   } else if (emailState.status === 'done') {
-  //     setIsLoading(false);
-  //   }
-  // }, [emailState]);
+  // Register user in backend after Privy login
+  const handleUserRegistration = async (privyUserId: string, walletAddress?: string) => {
+    try {
+      setIsRegistering(true);
+      console.log('Registering user in backend:', privyUserId);
 
-  // Check authentication status
+      const response = await registerUser(privyUserId, walletAddress);
+
+      if (response.success) {
+        console.log('User registered:', response.isNew ? 'New user' : 'Existing user');
+
+        // Check if user is already onboarded
+        if (response.data?.isOnboarded) {
+          console.log('User already onboarded, going to main app');
+          router.replace('/(tabs)');
+        } else {
+          console.log('User needs onboarding, going to category selection');
+          router.push('/category-selection');
+        }
+      } else {
+        throw new Error(response.message || 'Registration failed');
+      }
+    } catch (error: any) {
+      console.error('Error registering user:', error);
+      Alert.alert(
+        'Registration Error',
+        'Failed to complete registration. Please try again.',
+        [
+          { text: 'Retry', onPress: () => handleUserRegistration(privyUserId, walletAddress) },
+          { text: 'Continue Anyway', onPress: () => router.push('/category-selection') }
+        ]
+      );
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
+  // Check authentication status and register user
   useEffect(() => {
-    if (isReady && user) {
-      router.push('/category-selection');
+    if (isReady && user && !isRegistering) {
+      // Get wallet address if available from linked accounts
+      const walletAccount = user.linked_accounts?.find(
+        (account) => account.type === 'wallet'
+      ) as { type: string; address?: string } | undefined;
+      const walletAddress = walletAccount?.address;
+      handleUserRegistration(user.id, walletAddress);
     }
     console.log('AuthScreen - isReady:', isReady, 'user:', user);
   }, [isReady, user]);
@@ -86,15 +120,13 @@ const AuthScreen = () => {
   const handleTwitterLogin = async () => {
     try {
       setIsLoading(true);
-      // Set up OAuth configuration
       await loginWithOAuth({
         provider: 'twitter',
       });
     } catch (error: any) {
       console.error('Twitter login error:', error);
       setIsLoading(false);
-      
-      // Handle specific error cases
+
       if (error?.message?.includes('User cancelled')) {
         console.log('User cancelled Twitter login');
       } else {
@@ -136,16 +168,15 @@ const AuthScreen = () => {
     try {
       setIsLoading(true);
       await loginWithCode({ email, code });
-    } catch (err:any) {
+    } catch (err: any) {
       if (err?.message?.includes('Already logged in')) {
         console.log('User is already logged in, navigating to home...');
         router.navigate('/(tabs)');
         return;
-      }else{
+      } else {
         Alert.alert('Error', 'Verification failed');
-      console.error('Email verification error:', err);
+        console.error('Email verification error:', err);
       }
-      
     } finally {
       setIsLoading(false);
     }
@@ -179,9 +210,9 @@ const AuthScreen = () => {
             onPress={handleTwitterLogin}
             variant="primary"
             size="large"
-            loading={isLoading}
+            loading={isLoading || isRegistering}
             style={styles.connectButton}
-            disabled={!isReady || oauthState.status === 'loading'}
+            disabled={!isReady || oauthState.status === 'loading' || isRegistering}
           />
 
           <Text style={styles.helperText}>
@@ -206,7 +237,7 @@ const AuthScreen = () => {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
-              editable={!isLoading}
+              editable={!isLoading && !isRegistering}
             />
 
             {codeSent ? (
@@ -225,7 +256,7 @@ const AuthScreen = () => {
                   onPress={handleVerifyCode}
                   variant="outline"
                   size="large"
-                  loading={isLoading}
+                  loading={isLoading || isRegistering}
                   style={styles.emailButton}
                 />
               </>

@@ -8,18 +8,25 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-// Category API types
-export interface UserCategoryData {
-  userId: string;
+// User data matching backend User schema
+export interface UserData {
+  privyUserId: string;
+  polygonWalletAddress?: string;
+  usdcBalance: number;
+  maticBalance: number;
+  totalTrades: number;
+  totalVolume: number;
   selectedCategories: string[];
+  isOnboarded: boolean;
+  isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
 
-// Add more API interfaces below as needed
-// Example:
-// export interface UserData {
-//   id: string;
-//   email: string;
-//   name: string;
-// }
+// User registration response
+export interface RegisterUserResponse extends ApiResponse<UserData> {
+  isNew?: boolean;
+}
+
+// Category save response (returns full user data)
+export interface CategorySaveResponse extends ApiResponse<UserData> {}
