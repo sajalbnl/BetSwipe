@@ -19,7 +19,7 @@ export default function Layout() {
       clientId={clientId}
       config={{
         embedded: {
-            solana: {
+            ethereum: {
                 createOnLogin: 'users-without-wallets',
             },
         },
