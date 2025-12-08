@@ -12,6 +12,7 @@ export interface ApiResponse<T> {
 export interface UserData {
   privyUserId: string;
   polygonWalletAddress?: string;
+  smartWalletAddress?: string;
   usdcBalance: number;
   maticBalance: number;
   totalTrades: number;

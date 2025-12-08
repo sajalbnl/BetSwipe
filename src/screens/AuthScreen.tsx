@@ -67,12 +67,12 @@ const AuthScreen = () => {
   }, [oauthState]);
 
   // Register user in backend after Privy login
-  const handleUserRegistration = async (privyUserId: string, walletAddress?: string) => {
+  const handleUserRegistration = async (privyUserId: string, walletAddress?: string, smartWalletAddress?:string) => {
     try {
       setIsRegistering(true);
       console.log('Registering user in backend:', privyUserId);
 
-      const response = await registerUser(privyUserId, walletAddress);
+      const response = await registerUser(privyUserId, walletAddress,smartWalletAddress);
 
       if (response.success) {
         console.log('User registered:', response.isNew ? 'New user' : 'Existing user');
@@ -94,7 +94,7 @@ const AuthScreen = () => {
         'Registration Error',
         'Failed to complete registration. Please try again.',
         [
-          { text: 'Retry', onPress: () => handleUserRegistration(privyUserId, walletAddress) },
+          { text: 'Retry', onPress: () => handleUserRegistration(privyUserId, walletAddress,smartWalletAddress) },
           { text: 'Continue Anyway', onPress: () => router.push('/category-selection') }
         ]
       );
@@ -110,8 +110,14 @@ const AuthScreen = () => {
       const walletAccount = user.linked_accounts?.find(
         (account) => account.type === 'wallet'
       ) as { type: string; address?: string } | undefined;
+
+      const smartWalletAccount = user.linked_accounts?.find(
+        (account) => account.type === 'smart_wallet'
+      ) as { type: string; address?: string } | undefined;
+
       const walletAddress = walletAccount?.address;
-      handleUserRegistration(user.id, walletAddress);
+      const smartWalletAddress = smartWalletAccount?.address; 
+      handleUserRegistration(user.id, walletAddress, smartWalletAddress);
     }
     console.log('AuthScreen - isReady:', isReady, 'user:', user);
   }, [isReady, user]);

@@ -14,13 +14,15 @@ import {
 
 export const registerUser = async (
   privyUserId: string,
-  polygonWalletAddress?: string
+  polygonWalletAddress?: string,
+  smartWalletAddress?: string
 ): Promise<RegisterUserResponse> => {
   return apiCall<UserData>('/user/register', {
     method: 'POST',
     body: JSON.stringify({
       privyUserId,
       polygonWalletAddress,
+      smartWalletAddress
     }),
   }) as Promise<RegisterUserResponse>;
 };
@@ -35,7 +37,7 @@ export const getUser = async (
 
 export const updateUser = async (
   privyUserId: string,
-  updateData: Partial<Pick<UserData, 'polygonWalletAddress' | 'selectedCategories' | 'isOnboarded'>>
+  updateData: Partial<Pick<UserData, 'polygonWalletAddress' | 'smartWalletAddress' | 'selectedCategories' | 'isOnboarded'>>
 ): Promise<ApiResponse<UserData>> => {
   return apiCall<UserData>(`/user/${privyUserId}`, {
     method: 'PUT',
