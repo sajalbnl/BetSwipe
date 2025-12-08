@@ -1,11 +1,6 @@
-// app/_layout.tsx
-
-import React from 'react';
-import { Stack } from 'expo-router';
-import {PrivyProvider} from '@privy-io/expo';
-import {PrivyElements} from '@privy-io/expo/ui';
-import * as Linking from 'expo-linking';
-
+import React from "react";
+import { Stack } from "expo-router";
+import Providers from "../src/utils/polymarketProvider";
 
 export default function Layout() {
   const appId = process.env.EXPO_PUBLIC_PRIVY_APP_ID;
@@ -14,24 +9,13 @@ export default function Layout() {
   return (
     // customize screenOptions like headerShown false, animation, etc.
     <>
-    <PrivyProvider
-      appId={appId}
-      clientId={clientId}
-      config={{
-        embedded: {
-            ethereum: {
-                createOnLogin: 'users-without-wallets',
-            },
-        },
-    }}
-      > 
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
-    <PrivyElements config={{appearance: {accentColor: '#4562e7ff'}}} />
-    </PrivyProvider>
+      <Providers>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        />
+      </Providers>
     </>
   );
 }
