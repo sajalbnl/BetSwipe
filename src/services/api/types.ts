@@ -11,10 +11,8 @@ export interface ApiResponse<T> {
 // User data matching backend User schema
 export interface UserData {
   privyUserId: string;
-  polygonWalletAddress?: string;
+  eoaAddress?: string;
   smartWalletAddress?: string;
-  usdcBalance: number;
-  maticBalance: number;
   totalTrades: number;
   totalVolume: number;
   selectedCategories: string[];

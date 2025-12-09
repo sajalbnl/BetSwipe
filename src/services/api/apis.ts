@@ -37,7 +37,7 @@ export const getUser = async (
 
 export const updateUser = async (
   privyUserId: string,
-  updateData: Partial<Pick<UserData, 'polygonWalletAddress' | 'smartWalletAddress' | 'selectedCategories' | 'isOnboarded'>>
+  updateData: Partial<Pick<UserData, 'eoaAddress' | 'smartWalletAddress' | 'selectedCategories' | 'isOnboarded'>>
 ): Promise<ApiResponse<UserData>> => {
   return apiCall<UserData>(`/user/${privyUserId}`, {
     method: 'PUT',
