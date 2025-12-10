@@ -10,7 +10,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { usePrivy } from '@privy-io/expo';
-import {styles} from './CategorySelectionScreen.styles';
+import {styles} from '../styles/screens/CategorySelectionScreen.styles';
 import { CATEGORIES } from '../constants/categories';
 import { saveCategories, getCategories } from '../services/api/apis';
 

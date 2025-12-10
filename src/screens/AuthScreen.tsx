@@ -15,7 +15,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useRouter } from 'expo-router';
 import { COLORS } from '../constants/colors';
 import CustomButton from '../components/CustomButton';
-import styles from './AuthScreen.styles';
+import styles from '../styles/screens/AuthScreen.styles';
 import {
   usePrivy,
   useLoginWithEmail,
