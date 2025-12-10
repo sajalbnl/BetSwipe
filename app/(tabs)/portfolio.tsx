@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../src/constants/colors';
 import { TEXT_STYLES, FONT_SIZES } from '../../src/constants/typography';
@@ -227,6 +228,12 @@ const PortfolioScreen = () => {
   };
 
   return (
+    <LinearGradient
+              colors={['#0A0E1A', '#0F1A2E', '#0F1A2E']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.gradientContainer}
+            >
     <SafeAreaView style={styles.container}>
       {/* Fixed Header Section */}
       <View style={styles.fixedSection}>
@@ -269,7 +276,7 @@ const PortfolioScreen = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={COLORS.primary}
+            tintColor='#fff'
           />
         }
       >
@@ -283,17 +290,20 @@ const PortfolioScreen = () => {
         </TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor:'transparent',
   },
   fixedSection: {
-    backgroundColor: COLORS.background,
-    paddingBottom: 0,
+    backgroundColor: 'transparent',
     // Add shadow for iOS
     shadowColor: '#000',
     shadowOffset: {
@@ -324,7 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    marginBottom: 25,
+    marginBottom: 22,
   },
   statCard: {
     flex: 1,
@@ -340,7 +350,7 @@ const styles = StyleSheet.create({
   statLabel: {
     color: COLORS.textTertiary,
     fontSize: FONT_SIZES.xs,
-    marginBottom: 8,
+    marginBottom: 4,
     textTransform: 'uppercase',
   },
   statValue: {
@@ -356,8 +366,8 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     paddingHorizontal: 20,
-    paddingBottom: 15,
-    backgroundColor: COLORS.background,
+    paddingBottom: 10,
+    backgroundColor: 'transparent',
   },
   sectionTitle: {
     ...TEXT_STYLES.h3,
@@ -368,10 +378,10 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   positionsList: {
-    paddingTop: 5,
+    paddingTop: 3,
   },
   positionCard: {
     backgroundColor: COLORS.cardBackground,

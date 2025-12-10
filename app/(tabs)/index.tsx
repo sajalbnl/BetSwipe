@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePrivy } from '@privy-io/expo';
+import { LinearGradient } from 'expo-linear-gradient';
 import SwipeStack from '../../src/components/SwipeStack';
 import { SwipeStackRef } from '../../src/components/SwipeStack';
 import { COLORS } from '../../src/constants/colors';
@@ -72,12 +73,19 @@ export default function MarketsScreen() {
   // Loading state
   if (isLoading && markets.length === 0) {
     return (
+      <LinearGradient
+          colors={['#0A0E1A', '#0F1A2E', '#0F1A2E']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientContainer}
+        >
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.primary} />
           <Text style={styles.loadingText}>Loading markets...</Text>
         </View>
       </SafeAreaView>
+      </LinearGradient>
     );
   }
   
@@ -85,6 +93,12 @@ export default function MarketsScreen() {
   // Error state
   if (error && markets.length === 0) {
     return (
+      <LinearGradient
+          colors={['#0A0E1A', '#0F1A2E', '#0F1A2E']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientContainer}
+        >
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
@@ -93,10 +107,17 @@ export default function MarketsScreen() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+      </LinearGradient>
     );
   }
 
   return (
+    <LinearGradient
+          colors={['#0A0E1A', '#0F1A2E', '#0F1A2E']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientContainer}
+        >
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
@@ -185,13 +206,17 @@ export default function MarketsScreen() {
     
       
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',

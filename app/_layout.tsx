@@ -1,4 +1,5 @@
 import React from "react";
+import { StatusBar } from "react-native";
 import { Stack } from "expo-router";
 import Providers from "../src/utils/privyProvider";
 
@@ -7,8 +8,9 @@ export default function Layout() {
   const clientId = process.env.EXPO_PUBLIC_PRIVY_CLIENT_ID;
 
   return (
-    
+
     <>
+      <StatusBar barStyle="light-content" />
       <Providers>
         <Stack
           screenOptions={{
