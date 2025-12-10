@@ -226,14 +226,14 @@ const AuthScreen = () => {
           </Text>
 
           {/* Divider */}
-          <View style={styles.divider}>
+          {/* <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>OR</Text>
             <View style={styles.dividerLine} />
-          </View>
+          </View> */}
 
           {/* Email Login */}
-          <View style={styles.emailSection}>
+          {/* <View style={styles.emailSection}>
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
               style={styles.input}
@@ -276,7 +276,7 @@ const AuthScreen = () => {
                 style={styles.emailButton}
               />
             )}
-          </View>
+          </View> */}
         </View>
 
         {/* Footer */}

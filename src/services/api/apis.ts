@@ -14,14 +14,14 @@ import {
 
 export const registerUser = async (
   privyUserId: string,
-  polygonWalletAddress?: string,
+  eoaAddress?: string,
   smartWalletAddress?: string
 ): Promise<RegisterUserResponse> => {
   return apiCall<UserData>('/user/register', {
     method: 'POST',
     body: JSON.stringify({
       privyUserId,
-      polygonWalletAddress,
+      eoaAddress,
       smartWalletAddress
     }),
   }) as Promise<RegisterUserResponse>;

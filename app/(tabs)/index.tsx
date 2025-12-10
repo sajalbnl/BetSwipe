@@ -201,8 +201,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   logo: {
-    ...TEXT_STYLES.h3,
+    ...TEXT_STYLES.h2,
     color: COLORS.primary,
+    marginBottom: 4,
   },
   swipedCount: {
     fontSize: FONT_SIZES.xs,

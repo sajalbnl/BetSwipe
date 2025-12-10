@@ -7,6 +7,7 @@ import {
   StyleSheet,
   RefreshControl,
   Alert,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePrivy } from '@privy-io/expo';
@@ -65,11 +66,20 @@ const DUMMY_LEADERBOARD: LeaderboardEntry[] = [
 ];
 
 export default function ProfileScreen() {
-  const { logout } = usePrivy();
+  const { logout, user } = usePrivy();
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
   const [profileData] = useState<ProfileData>(DUMMY_PROFILE_DATA);
   const [leaderboard] = useState<LeaderboardEntry[]>(DUMMY_LEADERBOARD);
+
+  // Get Twitter account data from Privy
+  const twitter = user?.linked_accounts?.find(
+    (acc) => acc.type === 'twitter_oauth'
+  ) as { type: string; username?: string; name?: string; profile_picture_url?: string } | undefined;
+
+  const twitterUsername = twitter?.username || profileData.username;
+  const twitterName = twitter?.name || profileData.username;
+  const twitterAvatar = twitter?.profile_picture_url;
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -138,21 +148,30 @@ export default function ProfileScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Profile</Text>
-          <TouchableOpacity style={styles.settingsButton}>
+          {/* <TouchableOpacity style={styles.settingsButton}>
             <Text style={styles.settingsIcon}>☀️</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* User Info Section */}
         <View style={styles.userSection}>
-          <View style={styles.avatarContainer}>
-            <Text style={styles.avatarText}>👤</Text>
-          </View>
+          {twitterAvatar ? (
+            <Image
+              source={{ uri: twitterAvatar }}
+              style={styles.avatarImage}
+            />
+          ) : (
+            <View style={styles.avatarContainer}>
+              <Text style={styles.avatarText}>👤</Text>
+            </View>
+          )}
           <View style={styles.userInfo}>
-            <Text style={styles.username}>{profileData.username}</Text>
-            <Text style={styles.memberSince}>
-              Member since {profileData.memberSince}
+            <Text style={styles.username}>
+              {twitterName || twitterUsername}
             </Text>
+            {twitterUsername && (
+              <Text style={styles.twitterHandle}>@{twitterUsername}</Text>
+            )}
           </View>
         </View>
 
@@ -253,7 +272,7 @@ export default function ProfileScreen() {
               </View>
               <Text style={styles.leaderboardUsername}>
                 {entry.username.length > 8
-                  ? entry.username.slice(0, 8) + '...'
+                  ? entry.username.slice(0, 5) + '..'
                   : entry.username}
               </Text>
               <View style={styles.leaderboardStats}>
@@ -367,10 +386,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerTitle: {
-    ...TEXT_STYLES.h1,
-    color: COLORS.textPrimary,
-    fontSize: FONT_SIZES['3xl'],
-    fontWeight: FONT_WEIGHTS.bold,
+    ...TEXT_STYLES.h2,
+    color: COLORS.primary,
+    marginBottom: 5,
   },
   settingsButton: {
     width: 40,
@@ -396,6 +414,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  avatarImage: {
+    width: 66,
+    height: 66,
+    borderRadius: 32,
+  },
   avatarText: {
     fontSize: 32,
   },
@@ -404,10 +427,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   username: {
-    fontSize: FONT_SIZES.xl,
+    fontSize: FONT_SIZES['3xl'],
     fontWeight: FONT_WEIGHTS.bold,
     color: COLORS.textPrimary,
     marginBottom: 4,
+  },
+  twitterHandle: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.textSecondary,
   },
   memberSince: {
     fontSize: FONT_SIZES.sm,
