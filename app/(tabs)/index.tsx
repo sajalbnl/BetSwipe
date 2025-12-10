@@ -106,8 +106,8 @@ export default function MarketsScreen() {
             <Text style={styles.swipedCount}>{totalSwiped} swiped</Text>
           )}
         </View>
-        <TouchableOpacity style={styles.walletButton}>
-          <Text style={styles.walletText}>💰 Connect Wallet</Text>
+        <TouchableOpacity style={styles.addFundsButton}>
+          <Text style={styles.addFundsText}>💰 Add Funds</Text>
         </TouchableOpacity>
       </View>
 
@@ -209,13 +209,13 @@ const styles = StyleSheet.create({
     color: COLORS.textTertiary,
     marginTop: 2,
   },
-  walletButton: {
+  addFundsButton: {
     backgroundColor: COLORS.primary,
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
   },
-  walletText: {
+  addFundsText: {
     color: COLORS.textPrimary,
     fontSize: 14,
     fontWeight: '600',
