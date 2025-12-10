@@ -83,7 +83,7 @@ const AuthScreen = () => {
           router.replace('/(tabs)');
         } else {
           console.log('User needs onboarding, going to category selection');
-          router.push('/category-selection');
+          router.push('/(auth)/category-selection');
         }
       } else {
         throw new Error(response.message || 'Registration failed');
@@ -95,7 +95,7 @@ const AuthScreen = () => {
         'Failed to complete registration. Please try again.',
         [
           { text: 'Retry', onPress: () => handleUserRegistration(privyUserId, walletAddress,smartWalletAddress) },
-          { text: 'Continue Anyway', onPress: () => router.push('/category-selection') }
+          { text: 'Continue Anyway', onPress: () => router.push('/(auth)/category-selection') }
         ]
       );
     } finally {
