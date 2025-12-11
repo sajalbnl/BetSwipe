@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { usePrivy } from '@privy-io/expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import SwipeStack from '../../src/components/SwipeStack';
 import { SwipeStackRef } from '../../src/components/SwipeStack';
+import AddFundsBottomSheet, { AddFundsBottomSheetRef } from '../../src/components/AddFundsBottomSheet';
 import { COLORS } from '../../src/constants/colors';
 import { Market } from '../../src/types/market';
 import { useMarketFeed } from '../../src/hooks/useMarketFeed';
@@ -21,7 +22,17 @@ export default function MarketsScreen() {
   const { user } = usePrivy();
   const userId = user?.id;
   const swipeStackRef = useRef<SwipeStackRef>(null);
-  
+  const addFundsSheetRef = useRef<AddFundsBottomSheetRef>(null);
+
+  // Mock balance state - replace with actual wallet balance from Privy
+  const [balance, setBalance] = useState(0);
+
+  // Get smart wallet address from Privy user
+  const smartWalletAccount = user?.linked_accounts?.find(
+    (account) => account.type === 'smart_wallet'
+  ) as { type: string; address?: string } | undefined;
+  const depositAddress = smartWalletAccount?.address || '0x1a2B3c...cDeF12';
+
   const {
     markets,
     isLoading,
@@ -67,6 +78,25 @@ export default function MarketsScreen() {
 
   const handleYesPress = () => {
     swipeStackRef.current?.swipeRight();
+  };
+
+  // Add Funds handlers
+  const handleAddFundsPress = () => {
+    addFundsSheetRef.current?.open();
+  };
+
+  const handleRefreshBalance = async () => {
+    // TODO: Implement actual balance refresh from Privy wallet
+    // For now, simulate a refresh
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Mock balance update - replace with actual wallet balance fetch
+    setBalance(prev => prev + Math.random() * 10);
+  };
+
+  const handleWithdraw = () => {
+    // TODO: Implement withdraw functionality
+    addFundsSheetRef.current?.close();
+    console.log('Withdraw button pressed');
   };
 
   // Loading state
@@ -126,7 +156,12 @@ export default function MarketsScreen() {
             <Text style={styles.swipedCount}>{totalSwiped} swiped</Text>
           )}
         </View>
-        <TouchableOpacity style={styles.addFundsButton}>
+        <TouchableOpacity
+          style={styles.addFundsButton}
+          onPress={handleAddFundsPress}
+          accessibilityLabel="Add funds to wallet"
+          accessibilityRole="button"
+        >
           <Text style={styles.addFundsText}>💰 Add Funds</Text>
         </TouchableOpacity>
       </View>
@@ -202,8 +237,18 @@ export default function MarketsScreen() {
           <Text style={styles.buttonIcon}>✓</Text>
         </TouchableOpacity>
       </View>
-    
-      
+
+      {/* Add Funds Bottom Sheet */}
+      <AddFundsBottomSheet
+        ref={addFundsSheetRef}
+        depositAddress={depositAddress}
+        currentBalance={balance}
+        network="Polygon"
+        tokenType="USDC"
+        estimatedConfirmation="~2 minutes"
+        onRefreshBalance={handleRefreshBalance}
+        onWithdraw={handleWithdraw}
+      />
     </SafeAreaView>
     </LinearGradient>
   );
