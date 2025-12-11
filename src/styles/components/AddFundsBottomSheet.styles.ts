@@ -95,7 +95,7 @@ export const styles = StyleSheet.create({
     fontSize: FONT_SIZES.xs,
     fontWeight: FONT_WEIGHTS.medium,
     color: COLORS.textSecondary,
-    marginBottom: 2,
+    
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
@@ -119,7 +119,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   qrContainer: {
-    padding: 16,
+    padding: 6,
     backgroundColor: COLORS.inputBackground,
     borderRadius: 20,
     borderWidth: 2,
@@ -129,10 +129,6 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
-  },
-  qrCode: {
-    width: 240,
-    height: 240,
   },
 
   // Network Pill

@@ -16,7 +16,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { BlurView } from "expo-blur";
-import QRCodeStyled from "react-native-qrcode-styled";
+import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import { COLORS } from "../constants/colors";
 import { styles } from "../styles/components/AddFundsBottomSheet.styles";
@@ -264,21 +264,14 @@ const AddFundsBottomSheet = forwardRef<
               {/* QR Code */}
               <View style={styles.qrSection}>
                 <View style={styles.qrContainer}>
-                  <QRCodeStyled
-                    data={depositAddress}
-                    size={150}
-                    pieceBorderRadius={4}
-                    isPiecesGlued={false}
+                  <QRCode
+                    value={depositAddress}
+                    size={170}
                     color={COLORS.textPrimary}
-                    gradient={{
-                      type: "radial",
-                      options: {
-                        center: [0.5, 0.5],
-                        radius: [1, 1],
-                        colors: [COLORS.primary, COLORS.primaryDark],
-                        locations: [0, 1],
-                      },
-                    }}
+                    backgroundColor={COLORS.cardBackground}
+                    quietZone={5}
+                    // enableLinearGradient={true}
+                    // linearGradient={[COLORS.primary, COLORS.primaryDark]}
                   />
                 </View>
               </View>
